@@ -1,5 +1,5 @@
 file = open("D:\Python\CodeAdvent2023\day6_input.txt","r")
-part2 = False
+part2 = True
 list = file.readlines()
 times = list[0].split()[1:]
 count = len(times)
@@ -41,18 +41,16 @@ if part2:
         if buffer_result:
             max_speed = buffer
             buffer+=1000
+            print("Buffer")
         elif avg_result:
             max_speed = avg
         elif max_result:
             max_speed+=1
-            new_buffer =int(buffer * .99)
-            if new_buffer >= max_speed: buffer = new_buffer
-            elif buffer-1500 >= max_speed: buffer-=1000
-            else:buffer-=1
+            buffer = avg+1
         elif testRace(max_speed-1,times,distances) and not max_result: 
             max_speed-=1
             find_max = False
-            print("winner")
+            print("Winner")
         print(f"loop Mspeed:{max_speed} Aspeed:{avg} Bspeed {buffer}")
     print(max_speed)
     min_speed = times-max_speed
