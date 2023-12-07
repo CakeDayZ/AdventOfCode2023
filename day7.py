@@ -1,17 +1,14 @@
-file = open("D:\Python\CodeAdvent2023\day7_input.txt","r")
+file = open("D:\Python\CodeAdvent2023\day7_example.txt","r")
 list = file.readlines()
 partTwo = True
 max = len(list)
 hands =[]
 bids = []
-ranks = []
 if partTwo: high_cards = ["A","K","Q","T","9","8","7","6","5","4","3","2","J"]
 else: high_cards = ["A","K","Q","J","T","9","8","7","6","5","4","3","2"]
 def parseHand(input):
     hands.append(input.split()[0])
     bids.append(int(input.split()[1]))
-    ranks.append(1)
-    return input.split()[0]
 def compareHands(hand1,hand2): # return true if hand1 is better
     valOne = handType(hand1)
     valTwo = handType(hand2)
@@ -21,7 +18,7 @@ def compareHands(hand1,hand2): # return true if hand1 is better
             for j in high_cards:
                 if hand1[i] == j: return True
                 if hand2[i] == j: return False
-def handType(input):
+def handType(input): 
     counts = []
     jokers = 0
     for i in input:
@@ -44,24 +41,22 @@ def handType(input):
         if jokers: return 4
         return 2
     return 1+jokers
-def stupidSort(): #finds the rank of the newest card in the list, by comparing all cards and +1 to winner.
-    target = hands[-1]
-    target_index = len(hands)-1
-    for i in hands:
-        if i == target: continue
-        if compareHands(target,i): ranks[target_index]+=1
-        else: ranks[hands.index(i)]+=1
+def bogoSort():
+    unsorted = True
+    while unsorted:
+        unsorted = False
+        for i in range(max-1):
+            if compareHands(hands[i+1],hands[i]): continue
+            save_hand = hands[i]
+            hands.pop(i)
+            hands.insert(i+1,save_hand)
+            save_bid = bids[i]
+            bids.pop(i)
+            bids.insert(i+1,save_bid)
+            unsorted = True
 for i in list:
     parseHand(i)
-    stupidSort()
-hands2 = []
-bids2 = []
-for i in range(1,max+1): # reorder the lists to get them in actual order not just logical
-    new_index = ranks.index(i)
-    hands2.append(hands[new_index])
-    bids2.append(bids[new_index])
-hands = hands2
-bids = bids2
+bogoSort()
 totalScore = 0
 for i in range(max):
     totalScore+= bids[i]*(i+1)
